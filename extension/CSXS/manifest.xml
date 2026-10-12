@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="7.0" ExtensionBundleId="com.motiongraphics.panel.userpresets" ExtensionBundleVersion="2.8.0" ExtensionBundleName="Motion Graphics Team Templates">
+  <ExtensionList><Extension Id="com.motiongraphics.panel.userpresets.main" Version="2.8.0"/></ExtensionList>
+  <ExecutionEnvironment>
+    <HostList><Host Name="AEFT" Version="[23.0,26.99]"/></HostList>
+    <LocaleList><Locale Code="All"/></LocaleList>
+    <RequiredRuntimeList><RequiredRuntime Name="CSXS" Version="11.0"/></RequiredRuntimeList>
+  </ExecutionEnvironment>
+  <DispatchInfoList><Extension Id="com.motiongraphics.panel.userpresets.main"><DispatchInfo>
+    <Resources><MainPath>./index.html</MainPath><ScriptPath>./host/main.jsx</ScriptPath><CEFCommandLine><Parameter>--enable-nodejs</Parameter><Parameter>--mixed-context</Parameter></CEFCommandLine></Resources>
+    <Lifecycle><AutoVisible>true</AutoVisible></Lifecycle>
+    <UI><Type>Panel</Type><Menu>Motion Graphics · Team Templates</Menu><Geometry><Size><Width>760</Width><Height>700</Height></Size><MinSize><Width>380</Width><Height>460</Height></MinSize></Geometry></UI>
+  </DispatchInfo></Extension></DispatchInfoList>
+</ExtensionManifest>

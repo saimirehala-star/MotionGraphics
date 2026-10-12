@@ -1,0 +1,13 @@
+{
+  "name": "motion-graphics-ae-team-templates",
+  "version": "2.8.0",
+  "private": true,
+  "description": "AE 2023 motion presets, top-level pre-render workspace, expression library, and categorized composition templates",
+  "scripts": {
+    "build:jsx": "node scripts/build-jsx.cjs",
+    "preview": "node scripts/preview.cjs",
+    "test": "node --test",
+    "check": "node scripts/check.cjs",
+    "package": "python scripts/package.py"
+  }
+}

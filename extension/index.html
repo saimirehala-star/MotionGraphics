@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:; media-src 'self' file:; connect-src https: http://127.0.0.1 http://localhost; object-src 'none'">
+  <title>Motion Graphics · AE 2023–2026</title>
+  <link rel="stylesheet" href="css/panel.css">
+  <link rel="stylesheet" href="css/ai.css">
+  <link rel="stylesheet" href="css/assets.css">
+</head>
+<body>
+
+  <div class="app" data-panel="ui">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Motion<span class="brand-light">Graphics</span></span><span class="version">2.8.0</span></div>
+      <div class="top-actions"><button class="icon-button" id="help" title="使用说明" aria-label="使用说明">?</button></div>
+    </header>
+
+    <div class="mode-bar">
+      <div class="mode-tabs" role="tablist" aria-label="功能面板">
+        <button class="mode-tab active" role="tab" aria-selected="true" data-panel="ui"><span data-symbol="spark"></span>UI 动效</button>
+        <button class="mode-tab" role="tab" aria-selected="false" data-panel="tools"><span data-symbol="layers"></span>效率工具</button>
+        <button class="mode-tab" role="tab" aria-selected="false" data-panel="prerender"><span data-symbol="render"></span>预渲染</button>
+        <button class="mode-tab" role="tab" aria-selected="false" data-panel="templates"><span data-symbol="folder"></span>模版</button>
+        <button class="mode-tab" role="tab" aria-selected="false" data-panel="assets"><span data-symbol="folder"></span>素材库</button>
+        <button class="mode-tab" role="tab" aria-selected="false" data-panel="ai"><span data-symbol="spark"></span>AI 助手</button>
+      </div>
+      <div class="mode-actions"><span class="host-badge" id="host-badge">正在连接 AE…</span></div>
+    </div>
+
+    <div class="applied-bar" id="applied-bar" hidden>
+      <span class="applied-title">已应用</span>
+      <div class="applied-chips" id="applied-chips" aria-label="选中图层已应用的 UI 动效"></div>
+      <span class="applied-scope" id="applied-scope"></span>
+    </div>
+
+    <div class="workspace" id="preset-workspace">
+      <aside class="sidebar">
+        <span class="sidebar-label">预设分类</span>
+        <nav id="categories" aria-label="次级分类"></nav>
+        <div class="sidebar-footer"><span class="tiny-dot"></span>MADE TO MOVE</div>
+      </aside>
+
+      <main>
+        <div class="collection-heading">
+          <div><div class="eyebrow" id="category-en">ENTRANCE</div><h1 id="category-name">入场动画 <span id="preset-count">00</span></h1></div>
+          <div class="ui-heading-actions"><button class="primary-button save-current" id="save-current"><span data-symbol="save"></span><span id="save-current-label">保存当前动画</span></button><button class="icon-button preview-toggle" id="autoplay" aria-pressed="false" title="播放全部动态图标" aria-label="播放全部动态图标"><span data-symbol="play"></span></button></div>
+        </div>
+        <p class="collection-hint" id="category-hint"></p>
+
+        <div class="action-row">
+          <label class="search-row"><span data-symbol="search"></span><input id="search" type="search" placeholder="搜索本分类预设…" aria-label="搜索本分类预设"><kbd>/</kbd></label>
+          <div class="motion-duration" id="motion-duration"><label for="motion-duration-mode">时长</label><select id="motion-duration-mode" aria-label="动效时长模式"><option value="default">默认</option><option value="custom">自定义</option></select><input id="motion-duration-seconds" type="number" min="0.001" max="3600" step="0.01" value="0.8" aria-label="动效时长秒数" title="按当前合成帧率对齐；循环动效仅设置播放范围" hidden><span id="motion-duration-unit" hidden>秒</span></div>
+          <label id="extract-backup-option" hidden><input id="extract-keep-backup" type="checkbox" checked> 保留原子合成图层（关闭显示）</label>
+          <div class="tool-options" id="stagger-options" hidden>
+            <label>间隔帧<input id="frames" type="number" value="3" min="0" max="1000" step="1"></label>
+            <label>随机种子<input id="seed" type="number" value="17" min="1" max="99999" step="1"></label>
+          </div>
+          <button class="secondary-button danger" id="remove-keyloop" hidden>移除关键帧循环</button>
+          <div class="user-library-actions folder-actions" id="user-library-actions" hidden><span class="folder-path" id="user-folder-path" title="当前预设目录"></span><button class="secondary-button" id="choose-user-folder"><span data-symbol="folder"></span>设置目录</button><button class="secondary-button" id="open-user-folder">打开目录</button></div>
+          <div class="user-library-actions folder-actions" id="expression-library-actions" hidden><button class="secondary-button" id="add-expression"><span data-symbol="plus"></span>新增表达式</button><span class="folder-path" id="expression-folder-path" title="当前表达式目录"></span><button class="secondary-button" id="choose-expression-folder"><span data-symbol="folder"></span>设置目录</button><button class="secondary-button" id="open-expression-folder">打开目录</button></div>
+        </div>
+
+        <div class="preset-grid" id="presets" aria-label="预设集"></div>
+        <div class="empty" id="empty" hidden>没有找到匹配的预设<span>请换一个关键词</span></div>
+        <div class="collection-tip"><span data-symbol="cursor"></span>悬停播放动态图标 · 单击立即应用</div>
+      </main>
+    </div>
+
+    <section class="template-workspace" id="template-workspace" hidden>
+      <aside class="sidebar template-sidebar"><span class="sidebar-label">模版分类</span><nav id="template-categories" aria-label="模版分类"></nav><div class="sidebar-footer"><span class="tiny-dot"></span>TEAM LIBRARY</div></aside>
+      <main class="template-main">
+        <div class="collection-heading template-heading">
+          <div><div class="eyebrow">COMPOSITION TEMPLATES</div><h1>合成模版 <span id="template-count">00</span></h1></div>
+          <div class="template-actions"><button class="secondary-button" id="template-save-current"><span data-symbol="save"></span>保存当前合成</button><button class="secondary-button" id="refresh-templates"><span data-symbol="loop"></span>刷新</button><span class="folder-path" id="template-folder-path" title="当前模板目录"></span><button class="secondary-button" id="choose-template-folder"><span data-symbol="folder"></span>设置目录</button><button class="secondary-button" id="open-template-folder">打开目录</button></div>
+        </div>
+        <p class="collection-hint">保存当前合成、嵌套合成及实际使用的素材；单击卡片会将主合成作为预合成添加到当前时间头。</p>
+        <label class="search-row template-search"><span data-symbol="search"></span><input id="template-search" type="search" placeholder="搜索合成模版…" aria-label="搜索合成模版"></label>
+        <div class="template-job" id="template-job" hidden><div class="template-job-copy"><strong id="template-job-title">正在保存合成模版</strong><span id="template-job-message">正在准备…</span></div><div class="template-progress"><i id="template-progress-bar"></i></div><button class="secondary-button compact danger" id="cancel-template-job" type="button" hidden>终止保存</button><button class="secondary-button compact" id="show-template-worker" type="button" hidden>显示后台 AE</button></div>
+        <div class="template-grid" id="templates" aria-label="合成模版集"></div>
+        <div class="empty" id="template-empty" hidden>团队目录还没有合成模版<span>打开一个已保存的工程和合成，然后点击“保存当前合成”</span></div>
+        <div class="collection-tip"><span data-symbol="cursor"></span>单击模版即可导入，并放入当前活动合成</div>
+      </main>
+    </section>
+
+    <section class="prerender-workspace" id="prerender-workspace" hidden>
+      <main class="prerender-main">
+        <div class="collection-heading">
+          <div><div class="eyebrow">PRE-RENDER CACHE</div><h1>预渲染 <span id="prerender-count">00</span></h1></div>
+        </div>
+        <p class="collection-hint">把合成或连续图层渲染为时间块缓存，随时切换回源图层修改并更新。</p>
+        <section class="prerender-panel" id="prerender-panel">
+          <div class="prerender-hero"><div><span class="eyebrow">ACTIVE COMPOSITION</span><strong id="prerender-comp">请打开一个合成</strong></div><div class="prerender-mode-badge" id="prerender-mode">尚未缓存</div></div>
+          <div class="prerender-settings">
+            <label class="setting-card"><span>预渲染对象</span><select id="prerender-scope"><option value="0">当前合成全部</option><option value="1">所选连续图层</option><option value="2">最上方所选图层及以下</option></select><small>纯音频层会自动跳过</small></label>
+            <label class="setting-card"><span>时间范围</span><select id="prerender-range"><option value="0">工作区</option><option value="1">当前合成全部</option><option value="2">所选图层入出点</option><option value="3">PR_RANGE 合成标记</option></select><button class="inline-action" id="prerender-create-range" type="button">创建 / 定位范围标记</button></label>
+            <label class="setting-card"><span>结果方式</span><select id="prerender-result"><option value="0">应用到原合成</option><option value="1">生成独立预览合成</option></select><small>原合成模式可继续修改并更新缓存</small></label>
+            <label class="setting-card"><span>输出模块模板</span><select id="prerender-template"></select><button class="inline-action" id="prerender-refresh" type="button">读取 / 刷新</button></label>
+          </div>
+          <div class="prerender-folder"><div><span>输出目录</span><input id="prerender-folder" type="text" aria-label="预渲染输出目录"></div><button class="secondary-button" id="prerender-browse" type="button">选择目录</button></div>
+          <div class="prerender-note"><span data-symbol="layers"></span><div><strong>时间块缓存</strong><span>常规模式显示缓存；修改模式显示区间源片段。局部图层预渲染应选择支持 Alpha 的输出模板。</span></div></div>
+          <button class="prerender-start" id="prerender-start" type="button"><span data-symbol="render"></span><span><strong>开始预渲染</strong><small>渲染结束后自动导入并建立可管理的缓存时间块</small></span></button>
+          <div class="prerender-management">
+            <div class="management-head"><div><span class="eyebrow">CACHE MANAGEMENT</span><strong>缓存管理</strong></div><span id="prerender-groups">0 个时间块</span></div>
+            <div class="management-actions"><button class="secondary-button" id="prerender-regular">常规模式</button><button class="secondary-button" id="prerender-modify">修改模式</button><button class="secondary-button" id="prerender-update">更新预渲染</button><button class="secondary-button" id="prerender-return">返回旧缓存</button></div>
+            <div class="management-actions muted-actions"><button class="secondary-button" id="prerender-select-related">选择关联图层</button><button class="secondary-button" id="prerender-select-source">定位源片段</button><button class="secondary-button" id="prerender-open-source">打开源合成</button><button class="secondary-button" id="prerender-open-preview">打开结果合成</button></div>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <section class="asset-workspace" id="asset-workspace" hidden>
+      <aside class="sidebar"><div class="asset-category-head"><span class="sidebar-label">素材分类</span><button class="icon-button" id="asset-new-group" data-asset-mutation title="新建分组">＋</button></div><nav id="asset-groups" aria-label="素材分组"></nav><div class="sidebar-footer">ASSET LIBRARY</div></aside>
+      <main>
+        <div class="collection-heading"><div><div class="eyebrow">ASSET LIBRARY</div><h1>素材库 <span id="asset-count">0</span></h1></div><button class="primary-button" id="asset-import" data-asset-mutation>＋ 导入素材</button></div>
+        <p class="collection-hint">完整画面预览 · 悬停播放 · 添加到合成当前时间头</p>
+        <div class="asset-toolbar"><span id="asset-root" class="folder-path"></span><button class="secondary-button" id="asset-set-root" data-asset-mutation>设置目录</button><button class="secondary-button" id="asset-open-root">打开目录</button><button class="secondary-button" id="asset-refresh" data-asset-mutation>刷新</button></div>
+        <label class="search-row"><input id="asset-search" type="search" placeholder="搜索素材名称…" aria-label="搜索素材名称"></label>
+        <div class="asset-job"><span id="asset-status" role="status">选择目录或导入第一份素材</span><button id="asset-cancel-job" class="secondary-button danger" hidden>取消任务</button></div>
+        <div class="asset-grid" id="asset-grid"></div><div class="empty" id="asset-empty">还没有匹配的素材<span>导入图片、视频，或将整套序列帧收录为一张卡片</span></div><button class="secondary-button" id="asset-more" hidden>加载更多</button>
+      </main>
+    </section>
+    <section class="ai-workspace" id="ai-workspace" hidden>
+      <div class="ai-heading"><div><span class="eyebrow">CREATE WITH AI</span><h1>AI 助手 <span class="ai-beta">Codex 连接</span></h1></div><div class="ai-heading-actions"><button class="secondary-button" id="ai-history">历史会话</button><button class="secondary-button" id="ai-new">新对话</button></div></div>
+      <div id="ai-history-status" class="ai-privacy">对话自动保存在本机</div>
+      <section id="ai-history-panel" hidden aria-label="历史会话"><div class="ai-options"><strong>历史会话</strong><button id="ai-history-close" class="inline-action">关闭列表</button></div><div id="ai-history-list"></div></section>
+      <details class="ai-settings" open><summary>连接与执行设置 <span id="ai-account">未登录</span></summary>
+        <label class="ai-provider-label">连接方式 <select id="ai-provider"><option value="codex">Codex（使用当前配置 / CC Switch）</option></select></label>
+        <div id="ai-codex-settings">
+        <div class="ai-settings-grid">
+          <label>Codex 程序路径 <input id="ai-codex-path" placeholder="留空自动查找 codex.exe" autocomplete="off"></label>
+          <button class="secondary-button" id="ai-connect">连接 Codex</button>
+          <label>模型 <select id="ai-model"><option value="gpt-6-astra">GPT-6 Astra</option></select></label>
+          <button class="primary-button" id="ai-login">登录 ChatGPT</button>
+        </div>
+        <a id="ai-auth-link" hidden target="_blank" rel="noopener noreferrer">重新打开官方登录页面</a>
+        </div>
+        <div class="ai-options"><label><input id="ai-review-edits" type="checkbox">每次修改前确认</label><label><input id="ai-allow-script" type="checkbox">允许自由 JSX（逐次确认）</label><label><input id="ai-auto-script" type="checkbox">允许自由 JSX（无需确认）</label><button id="ai-logout" class="inline-action">退出登录</button></div>
+        <p class="ai-privacy">插件复用当前 Codex 配置，包括 CC Switch 的 provider、API Key、代理、重试和模型设置。发送需求时，会将当前合成结构和所需图层属性提供给模型；不自动上传素材文件。</p>
+      </details>
+      <div class="ai-context"><span id="ai-target">发送时锁定当前合成</span><button id="ai-read-context" class="inline-action">查看当前范围</button></div>
+      <div id="ai-messages" class="ai-messages" aria-label="AI 对话记录"><div class="ai-welcome"><span class="ai-orbit">✧</span><h2>从一个想法开始</h2><p>独立创建动画，也能调用团队预设与效率工具。</p><div class="ai-prompts"><button data-ai-prompt="读取选中图层的效果和表达式，告诉我有哪些问题，先不要修改。">检查选中图层</button><button data-ai-prompt="在当前合成中新建文字“童话岛”，设置从当前时间头开始持续0.6秒的淡入和向上移动动画。">创建标题动画</button><button data-ai-prompt="查看可用的团队入场预设，为选中的图层选择合适的动效，按顺序错开3帧。">应用团队动效</button></div></div></div>
+      <div class="ai-status" id="ai-status" role="status">未连接 · 点击“连接 Codex”开始</div>
+      <form id="ai-form" class="ai-composer"><textarea id="ai-input" rows="3" maxlength="20000" placeholder="描述你想创建或修改的内容…" aria-label="发送给 AI 的需求"></textarea><div><span>Ctrl + Enter 发送</span><button type="button" id="ai-stop" class="secondary-button" disabled>停止</button><button type="submit" id="ai-send" class="primary-button">发送</button></div></form>
+    </section>
+    <div class="workflow-note"><span class="range-symbol" aria-hidden="true"></span><span id="workflow-note-text">拖动范围标记改起止，拉伸改时长；每个 UI 分类第一张卡片可清除本类动效。</span></div>
+    <footer class="statusbar"><span id="connection-dot" class="tiny-dot"></span><span id="status" role="status" aria-live="polite">正在连接…</span><span class="footer-version">AE 2023–2026 · CEP</span></footer>
+  </div>
+
+  <div class="toast" id="toast" role="alert" hidden></div>
+  <div class="modal-backdrop" id="asset-import-modal" hidden><section class="modal save-modal" role="dialog" aria-modal="true" aria-labelledby="asset-import-title">
+    <div class="modal-head"><h2 id="asset-import-title">导入素材</h2><button class="icon-button" id="asset-import-close" aria-label="关闭">×</button></div>
+    <form id="asset-import-form">
+      <label class="form-field"><span>素材名称（留空使用文件名；批量导入自动加序号）</span><input id="asset-import-name" maxlength="120" placeholder="例如：云朵贴纸"></label>
+      <label class="form-field"><span>素材分组</span><select id="asset-import-group"></select><input id="asset-import-new-group" maxlength="48" placeholder="新分组名称" hidden></label>
+      <button type="button" class="secondary-button" id="asset-pick-files">选择资源文件…</button><p id="asset-files-summary" class="collection-hint">尚未选择文件</p>
+      <label class="asset-check"><input id="asset-as-sequence" type="checkbox">作为图片序列导入（只选择其中一帧）</label>
+      <label class="form-field"><span>序列帧率</span><input id="asset-sequence-fps" type="number" min="1" max="120" step="0.001" value="25"></label>
+      <label class="form-field"><span>SVG 转换最大边长（像素，保留比例）</span><input id="asset-svg-size" type="number" min="64" max="8192" step="1" value="2048"></label>
+      <p class="collection-hint">原文件复制到素材库；序列编号需要连续。SVG 添加到 AE 2023–2026 时使用透明 PNG。长视频的动态预览取前 30 秒。</p>
+      <div id="asset-import-error" class="asset-error" role="status"></div><div class="modal-actions"><button class="primary-button" type="submit" data-asset-mutation>导入素材</button></div>
+    </form>
+  </section></div>
+  <div class="modal-backdrop" id="asset-edit-modal" hidden><section class="modal save-modal" role="dialog" aria-modal="true" aria-labelledby="asset-edit-title"><div class="modal-head"><h2 id="asset-edit-title"></h2><button id="asset-edit-close" class="icon-button" aria-label="关闭">×</button></div><form id="asset-edit-form"><label class="form-field"><span>名称 / 选项</span><input id="asset-edit-value" maxlength="120"><select id="asset-edit-group" hidden></select></label><div class="asset-error" id="asset-edit-error" role="status"></div><div class="modal-actions"><button id="asset-edit-submit" class="primary-button" type="submit">确定</button></div></form></section></div>
+  <div class="modal-backdrop" id="asset-detail-modal" hidden><section class="modal asset-detail" role="dialog" aria-modal="true" aria-labelledby="asset-detail-title"><div class="modal-head"><h2 id="asset-detail-title"></h2><button class="icon-button" id="asset-detail-close" aria-label="关闭">×</button></div><div id="asset-detail-media"></div><p id="asset-detail-info" class="collection-hint"></p><label class="form-field"><span>PSD 添加方式</span><select id="asset-psd-mode"><option value="merged">合并为素材</option><option value="layers">保留图层，作为预合成</option></select></label><div class="asset-detail-actions"><button id="asset-detail-add" class="primary-button" data-asset-mutation>＋ 添加到合成</button><button id="asset-detail-convert" class="secondary-button" data-asset-mutation title="直接添加失败时，转换为兼容的 MOV；可能占用较多磁盘空间">转换后添加</button><button id="asset-detail-retry" class="secondary-button" data-asset-mutation>重试预览</button><button id="asset-detail-rename" class="secondary-button" data-asset-mutation>重命名</button><button id="asset-detail-reveal" class="secondary-button">打开所在目录</button><button id="asset-detail-remove" class="inline-action" data-asset-mutation>移出素材库</button></div></section></div>
+  <div class="modal-backdrop" id="save-modal" hidden>
+    <section class="modal save-modal" role="dialog" aria-modal="true" aria-labelledby="save-title">
+      <div class="modal-head"><div><span class="eyebrow">USER PRESET</span><h2 id="save-title">保存当前动画</h2></div><button class="icon-button" id="close-save" type="button" aria-label="关闭保存窗口">×</button></div>
+      <form id="save-form">
+        <label class="form-field"><span>预设名称</span><input id="save-name" maxlength="48" required placeholder="例如：卡片弹入"></label>
+        <label class="form-field"><span>所属分类</span><select id="save-category"><option value="in">入场动画</option><option value="loop">循环动画</option><option value="out">出场动画</option><option value="feedback">交互反馈</option></select></label>
+        <label class="form-field"><span>说明</span><textarea id="save-description" maxlength="160" rows="3" placeholder="可选：适用场景或视觉特征"></textarea></label>
+        <div class="capture-note"><strong>捕获规则</strong><span>优先使用已选关键帧的首尾范围；否则使用图层上受支持属性的全部关键帧。表达式会保存原文并采样结果；带关键帧的表达式会继续捕获最后关键帧后的弹性或惯性尾段。</span></div>
+        <div class="modal-actions"><button class="secondary-button" id="cancel-save" type="button">取消</button><button class="primary-button" type="submit">保存到团队预设</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="template-save-modal" hidden>
+    <section class="modal save-modal" role="dialog" aria-modal="true" aria-labelledby="template-save-title">
+      <div class="modal-head"><div><span class="eyebrow">COMPOSITION TEMPLATE</span><h2 id="template-save-title">保存当前合成</h2></div><button class="icon-button" id="close-template-save" type="button" aria-label="关闭模版保存窗口">×</button></div>
+      <form id="template-save-form">
+        <label class="form-field"><span>模版名称</span><input id="template-save-name" maxlength="64" required placeholder="例如：童话标题卡"></label>
+        <label class="form-field"><span>所属分类</span><select id="template-save-category"><option value="__new__">＋ 新建分类</option><option value="未分类">未分类</option></select></label>
+        <label class="form-field" id="template-new-category-field"><span>新分类名称</span><input id="template-new-category" maxlength="32" placeholder="例如：标题包装"></label>
+        <label class="form-field"><span>说明</span><textarea id="template-save-description" maxlength="200" rows="3" placeholder="可选：用途、尺寸或使用说明"></textarea></label>
+        <div class="capture-note"><strong>保存规则</strong><span>当前工程会先保存，然后由独立 AE 工作进程处理副本。它会保留当前合成、嵌套合成、表达式的固定名称依赖及使用的素材，并在当前时间头生成静帧预览。</span><span>工作 AE 默认隐藏；若出现弹窗或长时间无进度，可在任务条点击“显示后台 AE”。</span><span id="template-preview-time">预览取自当前时间头</span></div>
+        <div class="modal-actions"><button class="secondary-button" id="cancel-template-save" type="button">取消</button><button class="primary-button" type="submit">保存到团队模版</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="expression-edit-modal" hidden>
+    <section class="modal expression-modal" role="dialog" aria-modal="true" aria-labelledby="expression-edit-title">
+      <div class="modal-head"><div><span class="eyebrow">EXPRESSION LIBRARY</span><h2 id="expression-edit-title">新增表达式</h2></div><button class="icon-button" id="close-expression-edit" type="button" aria-label="关闭表达式窗口">×</button></div>
+      <form id="expression-form">
+        <input id="expression-id" type="hidden">
+        <label class="form-field"><span>表达式名称</span><input id="expression-name" maxlength="64" required placeholder="例如：弹性回弹"></label>
+        <label class="form-field"><span>使用方法</span><textarea id="expression-usage" maxlength="1200" rows="4" required placeholder="例如：添加到缩放属性；先制作两个关键帧，再调节 amp、freq 和 decay。"></textarea></label>
+        <label class="form-field"><span>具体表达式</span><textarea class="code-input" id="expression-code" maxlength="50000" rows="12" required spellcheck="false" placeholder="粘贴 After Effects 表达式…"></textarea></label>
+        <div class="modal-actions"><button class="secondary-button" id="cancel-expression-edit" type="button">取消</button><button class="primary-button" type="submit">保存表达式</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="expression-view-modal" hidden>
+    <section class="modal expression-modal" role="dialog" aria-modal="true" aria-labelledby="expression-view-title">
+      <div class="modal-head"><div><span class="eyebrow">EXPRESSION</span><h2 id="expression-view-title">表达式</h2></div><button class="icon-button" id="close-expression-view" type="button" aria-label="关闭表达式详情">×</button></div>
+      <div class="expression-usage"><span>使用方法</span><p id="expression-view-usage"></p></div>
+      <div class="expression-code-block"><span>表达式代码</span><pre id="expression-view-code"></pre></div>
+      <div class="modal-actions split-actions"><div><button class="secondary-button" id="edit-expression" type="button">修改</button><button class="secondary-button danger" id="delete-expression" type="button">删除</button></div><button class="primary-button copy-expression" id="copy-expression" type="button"><span data-symbol="copy"></span>复制表达式</button></div>
+    </section>
+  </div>
+  <div class="modal-backdrop" id="help-modal" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="modal-head"><div><span class="eyebrow">QUICK GUIDE</span><h2 id="help-title">使用说明</h2></div><button class="icon-button" id="close-help" aria-label="关闭说明">×</button></div>
+      <ol>
+        <li>在 AE 合成中选中一个或多个图层，再单击预设卡片。</li>
+        <li>UI 动效会在原图层自动创建范围标记；拖动改起点，拉伸改时长。循环动画默认从当前时间头开始，到时间头后一秒。</li>
+        <li>幅度、方向、角度、弹性和循环周期等属性，只在图层的“效果控件”中调整。重复单击同一个动效不会重置已调参数。</li>
+        <li>每个 UI 分类的第一张卡片是“清除本类动效”，可一次清除选中图层对应的范围标记、表达式和插件控件，并可用一次 Ctrl+Z 撤销。</li>
+        <li>直接删除范围标记会立即停止对应动效；重新返回插件面板时才按需清理控件，不再每秒扫描合成。</li>
+        <li>不同类别可以组合。同类换预设会替换动效并保留原范围；关键帧循环需用对应分类中的按钮移除。</li>
+        <li>“保存当前动画”可把一个图层的变换、表达式采样结果和受支持的 AE 原生效果保存为 JSON，在“团队预设”中共享并再次应用。</li>
+        <li>“模版”可把当前合成及使用的素材保存为独立 `.aep` 模版包；保存时可选已有分类或新建分类。</li>
+        <li>模版保存使用默认隐藏的独立 AE 工作进程；遇到 AE 弹窗或异常时，点任务条的“显示后台 AE”即可处理。</li>
+        <li>“表达式”用于保存团队常用的名称、使用方法和代码；单击卡片后可复制，也可修改或删除。</li>
+        <li>顶部“预渲染”使用 AE 输出模块生成时间块缓存；局部图层请选支持 Alpha 的输出模块。</li>
+      </ol>
+      <p>团队动效预设、合成模版和表达式默认保存在团队共享目录，也可以在各页面分别设置自定义目录；插件会记住下次打开时的目录。字体和第三方插件不会打包；动态表达式依赖和缺失素材会在保存结果中提示。</p>
+      <div class="modal-actions"><button class="secondary-button" id="upgrade">旧动效升级 / 修复</button><button class="primary-button" id="close-help-bottom">关闭</button></div>
+    </section>
+  </div>
+
+  <script src="js/reference-presets.js"></script>
+  <script src="js/catalog.js"></script>
+  <script src="js/motion.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/preview.js"></script>
+  <script src="js/bridge.js"></script>
+  <script src="js/assets.js"></script>
+  <script src="js/panel.js"></script>
+  <div class="modal-backdrop" id="ai-approval" hidden><section class="modal ai-approval-modal" role="dialog" aria-modal="true" aria-labelledby="ai-approval-title"><h2 id="ai-approval-title">确认 AE 操作</h2><p id="ai-script-warning" hidden>自由 JSX 不是沙箱，能够修改工程、访问本机文件。请检查完整脚本；文件写入和渲染等操作不能保证通过 AE 撤销恢复。</p><pre id="ai-approval-body"></pre><pre id="ai-approval-code" hidden></pre><div class="modal-actions"><button id="ai-decline" class="secondary-button">取消本次操作</button><button id="ai-approve" class="primary-button">确认执行</button></div></section></div>
+  <script src="js/ai-panel.js"></script>
+  <script src="js/ai-history.js"></script>
+</body>
+</html>
+
+
+

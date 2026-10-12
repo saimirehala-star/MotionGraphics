@@ -1,0 +1,8 @@
+const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const source=fs.readFileSync('extension/host/compatibility.jsx','utf8');
+function setup(version,exists){const c={app:{version},Folder:{appPackage:{fsName:'D:/AE '+version+'/Support Files'}},File:p=>({fsName:p,exists:exists&&exists(p)})};vm.runInNewContext(source,c);return c.MGCompatibility;}
+for(const v of ['23.0','23.6.9','24.6','25.6','26.0','26.5'])test('accept AE '+v,()=>{const c=setup(v);assert.equal(c.requireSupported().supported,true);assert.equal(c.current().major,parseInt(v));});
+for(const v of ['22.6','27.0','garbage'])test('reject out of range '+v,()=>{assert.throws(()=>setup(v).requireSupported());});
+test('template version policy allows old and legacy records, rejects future major',()=>{const c=setup('23.6');c.checkTemplate('23.0','26.5');c.checkTemplate('','23.6');c.checkTemplate('26.5','26.0');assert.throws(()=>c.checkTemplate('26.0','23.6'));});
+test('background command belongs to current host, never falls back to another install',()=>{const c=setup('26.5',p=>p.endsWith('AfterFX.exe'));assert.equal(c.command().fsName,'D:/AE 26.5/Support Files/AfterFX.exe');assert.throws(()=>setup('24.0',()=>false).command());});
+test('manifest and host load share supported range; AI context carries host version',()=>{assert.match(fs.readFileSync('extension/CSXS/manifest.xml','utf8'),/\[23\.0,26\.99\]/);assert.match(fs.readFileSync('extension/host/main.jsx','utf8'),/host\/compatibility\.jsx/);assert.match(fs.readFileSync('extension/host/ai.jsx','utf8'),/aeVersion: String\(app.version\)/);});

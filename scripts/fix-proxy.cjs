@@ -1,0 +1,12 @@
+const fs=require('fs');
+const file='extension/node/third-party-client.cjs';let s=fs.readFileSync(file,'utf8');
+s=s.replace('this.url=endpoint(config.baseURL,config.protocol);','this.url=endpoint(config.baseURL,config.protocol);this.proxy=String(config.proxy||\'\').trim();if(this.proxy)require(\'./proxy-agent.cjs\').proxyURL(this.proxy);');
+s=s.replace("if(this.proxy)return this.postViaProxy(body); if(process.platform==='win32'", "if(!this.proxy&&process.platform==='win32'");
+s=s.replace("const transport=require(new URL(this.url).protocol==='https:'?'https':'http');let settled=false,req;","const secure=new URL(this.url).protocol==='https:',transport=require(secure?'https':'http'),agent=this.proxy?require('./proxy-agent.cjs').proxyAgent(this.proxy,secure):undefined;let settled=false,req;");
+s=s.replace("if(req)req.destroy(new Error('接口请求超时；不会自动重试，请检查服务商状态。'));","const e=new Error('接口请求超时；不会自动重试，请检查代理或服务商状态。');if(req)req.destroy(e);finish(e);");
+s=s.replace('settled=true;clearTimeout(timer);','settled=true;clearTimeout(timer);if(agent)agent.destroy();');
+s=s.replace("{method:'POST',headers:","{agent,method:'POST',headers:");
+s=s.replace('this.request=req;req.on(\'error\',e=>finish(e));',"this.request=req;if(agent){const destroy=req.destroy.bind(req);req.destroy=function(e){destroy(e);finish(e||new Error('任务已停止。'));return req;};}req.on('error',e=>finish(e));");
+s=s.replace('  postViaProxy(body){ return this.postSystem(body); }\r\n','').replace('  postViaProxy(body){ return this.postSystem(body); }\n','');fs.writeFileSync(file,s);
+const panel='extension/js/ai-panel.js';s=fs.readFileSync(panel,'utf8').replace("+' · '+client.model);","+' · '+client.model+' · '+(client.proxy?'HTTP 代理 '+new URL(client.proxy).host:'Windows 系统代理'));");fs.writeFileSync(panel,s);
+const html='extension/index.html';s=fs.readFileSync(html,'utf8').replace('设置保存修复 0908','代理隧道修复 0908-R2').replace('第三方 HTTPS 请求跟随 Windows 系统代理（含 PAC）；请在 VPN 中开启系统代理。','填写 HTTP/Mixed 代理地址后使用 Node CONNECT 隧道（不经过 PowerShell）；留空使用 Windows 系统代理。');fs.writeFileSync(html,s);

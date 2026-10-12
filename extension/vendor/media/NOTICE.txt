@@ -1,0 +1,22 @@
+Motion Graphics media tools
+
+FFmpeg and FFprobe are separate executables, distributed without modification.
+They run locally to decode media, generate previews, and prepare AE-compatible files.
+
+FFmpeg 6.1.1 essentials Windows x64, Gyan build (via ffmpeg-static npm package).
+Exact FFmpeg source: https://github.com/FFmpeg/FFmpeg/commit/e38092ef93
+Build project and dependency/build information: https://www.gyan.dev/ffmpeg/builds/
+See ffmpeg-build-README.txt and COPYING-GPLv3.txt.
+
+FFprobe Windows x64, Gyan build 20230213-2296078
+Distributed via @ffprobe-installer/win32-x64 5.1.0 (npm).
+Exact FFmpeg source: https://github.com/FFmpeg/FFmpeg/commit/2296078
+Build project: https://www.gyan.dev/ffmpeg/builds/
+See ffprobe-package.json and COPYING-GPLv3.txt.
+
+FFmpeg project: https://ffmpeg.org/
+Upstream package distribution: https://www.npmjs.com/package/ffmpeg-static
+https://www.npmjs.com/package/@ffprobe-installer/win32-x64
+
+These components retain their GPL v3 licenses. Keep these notices and the
+corresponding source/build references with redistributed packages.

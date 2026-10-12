@@ -1,0 +1,7 @@
+const fs=require('fs'),p='extension/js/ai-panel.js';let s=fs.readFileSync(p,'utf8');
+s=s.replace("await client.start(text,start.data.context,model);","var historyPrefix=window.MGAIHistory?window.MGAIHistory.context():'';await client.start(historyPrefix+text,start.data.context,model);if(window.MGAIHistory)window.MGAIHistory.sent();");
+s=s.replace("if(busy)return;if(client)client.newChat();chat.innerHTML='';rows={};endScope();add('notice','已开始新对话。", "if(busy)return;if(window.MGAIHistory)window.MGAIHistory.newSession();if(client)client.newChat();chat.innerHTML='';rows={};endScope();add('notice','已开始新对话。");
+s=s.replace("function(){dropClient();endScope();$('ai-codex-settings')", "function(){if(window.MGAIHistory)window.MGAIHistory.newSession();dropClient();endScope();$('ai-codex-settings')");
+s=s.replace("window.MGAI={isBusy:function(){return busy;}};","window.MGAI={isBusy:function(){return busy;},resetHistoryContext:function(){if(busy)return;rejectApproval();endScope();if(client)client.newChat();rows={};serial=Promise.resolve();}};");
+fs.writeFileSync(p,s);
+fs.appendFileSync('extension/css/panel.css','\n#ai-history-panel{flex:none;max-height:260px;overflow:auto;padding:12px;border:1px solid #51465f;border-radius:8px}.ai-history-row{display:flex;gap:8px;margin-top:8px}.ai-history-row .secondary-button{flex:1;min-width:0;height:auto;white-space:normal;text-align:left;overflow-wrap:anywhere;padding:8px}#ai-history-status{flex:none;margin:4px 0}\n');
